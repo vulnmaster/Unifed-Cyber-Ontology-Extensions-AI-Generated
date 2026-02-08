@@ -1,0 +1,274 @@
+# imports: https://ontology.unifiedcyberontology.org/uco/core/1.4.0
+# imports: https://ontology.unifiedcyberontology.org/uco/action/1.4.0
+# imports: https://ontology.unifiedcyberontology.org/uco/observable/1.4.0
+# imports: https://ontology.unifiedcyberontology.org/uco/tool/1.4.0
+
+@prefix observable_ai_ext: <https://ontology.unifiedcyberontology.org/uco/observable-ai-ext/> .
+@prefix observable: <https://ontology.unifiedcyberontology.org/uco/observable/> .
+@prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-tool: <https://ontology.unifiedcyberontology.org/uco/tool/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://ontology.unifiedcyberontology.org/uco/observable-ai-ext>
+	a owl:Ontology ;
+	rdfs:label "UCO Observable AI Extensions (AI-Generated)"@en ;
+	rdfs:comment "AI-generated UCO Observable extensions created for Project VIC's Autopsy-Rust project. These extensions add: (1) forensic extraction provenance facets for tracing any extracted observable back to its source file, record locator, and extraction tool/action; (2) enriched Windows event record attribution supporting multiple accounts (Subject vs Target) and logon/session correlation; and (3) memory image representation for volatile memory acquisitions. These extensions do NOT assert account-to-human ownership."@en ;
+	owl:imports
+		uco-core:1.4.0 ,
+		uco-action:1.4.0 ,
+		observable:1.4.0 ,
+		uco-tool:1.4.0
+		;
+	owl:versionIRI observable_ai_ext:1.0.0 ;
+	.
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# 1) Forensic Extraction Provenance
+# ═══════════════════════════════════════════════════════════════════════════════
+
+observable_ai_ext:ForensicExtractionFacet
+	a
+		owl:Class ,
+		sh:NodeShape
+		;
+	rdfs:subClassOf uco-core:Facet ;
+	rdfs:label "Forensic Extraction Facet"@en ;
+	rdfs:comment "A facet describing how and where an observable was extracted from a forensic data source. Captures the source file (e.g., NTUSER.DAT, SAM hive, EVTX log, pagefile, memory image container), a record locator (e.g., registry key path, EVTX record number, XPath, database table/row), byte offset within the source file, and the extraction tool and action that performed the extraction. This facet can be attached to any ObservableObject via uco-core:hasFacet. Generated for Project VIC's Autopsy-Rust project."@en ;
+	sh:property
+		[
+			sh:class observable:File ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:IRI ;
+			sh:path observable_ai_ext:sourceFile ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:sourceRecordLocator ;
+		] ,
+		[
+			sh:datatype xsd:nonNegativeInteger ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:sourceByteOffset ;
+		] ,
+		[
+			sh:class uco-tool:ConfiguredTool ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:IRI ;
+			sh:path observable_ai_ext:extractionTool ;
+		] ,
+		[
+			sh:class uco-action:Action ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:IRI ;
+			sh:path observable_ai_ext:extractionAction ;
+		]
+		;
+	sh:targetClass observable_ai_ext:ForensicExtractionFacet ;
+	.
+
+observable_ai_ext:sourceFile
+	a owl:ObjectProperty ;
+	rdfs:label "sourceFile"@en ;
+	rdfs:comment "The file from which the observable was extracted (e.g., an NTUSER.DAT registry hive, a SAM hive, an EVTX log file, a pagefile, a hibernation file, or a memory image container)."@en ;
+	rdfs:range observable:File ;
+	.
+
+observable_ai_ext:sourceRecordLocator
+	a owl:DatatypeProperty ;
+	rdfs:label "sourceRecordLocator"@en ;
+	rdfs:comment "A locator string identifying the specific record within the source file from which the observable was extracted (e.g., a Windows registry key path like 'HKU\\S-1-5-21-...-1001\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\UserAssist', an EVTX record number, an XPath expression, a database table/row reference, or an MFT entry number)."@en ;
+	rdfs:range xsd:string ;
+	.
+
+observable_ai_ext:sourceByteOffset
+	a owl:DatatypeProperty ;
+	rdfs:label "sourceByteOffset"@en ;
+	rdfs:comment "The byte offset within the source file at which the extracted record begins, when available."@en ;
+	rdfs:range xsd:nonNegativeInteger ;
+	.
+
+observable_ai_ext:extractionTool
+	a owl:ObjectProperty ;
+	rdfs:label "extractionTool"@en ;
+	rdfs:comment "The tool or module that performed the extraction of this observable from its source file."@en ;
+	rdfs:range uco-tool:ConfiguredTool ;
+	.
+
+observable_ai_ext:extractionAction
+	a owl:ObjectProperty ;
+	rdfs:label "extractionAction"@en ;
+	rdfs:comment "The action instance that performed the extraction (may be a CASE InvestigativeAction or a UCO Action-compatible node documenting the extraction step)."@en ;
+	rdfs:range uco-action:Action ;
+	.
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# 2) Windows Event Record Enrichment
+# ═══════════════════════════════════════════════════════════════════════════════
+
+observable_ai_ext:WindowsEventRecordFacet
+	a
+		owl:Class ,
+		sh:NodeShape
+		;
+	rdfs:subClassOf observable:EventRecordFacet ;
+	rdfs:label "Windows Event Record Facet"@en ;
+	rdfs:comment "An extension of the UCO EventRecordFacet that adds Windows-specific event metadata and multi-account attribution. Windows Security events commonly reference two distinct accounts (SubjectUserSid/SubjectUserName and TargetUserSid/TargetUserName), which the base EventRecordFacet's single 'account' property cannot express. This facet adds subjectAccount and targetAccount as subproperties of observable:account, plus event channel, provider, computer, and logon ID for session correlation. Generated for Project VIC's Autopsy-Rust project."@en ;
+	sh:property
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:eventChannel ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:eventProvider ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:eventComputer ;
+		] ,
+		[
+			sh:class observable:ObservableObject ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:IRI ;
+			sh:path observable_ai_ext:subjectAccount ;
+		] ,
+		[
+			sh:class observable:ObservableObject ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:IRI ;
+			sh:path observable_ai_ext:targetAccount ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:logonId ;
+		]
+		;
+	sh:targetClass observable_ai_ext:WindowsEventRecordFacet ;
+	.
+
+observable_ai_ext:eventChannel
+	a owl:DatatypeProperty ;
+	rdfs:label "eventChannel"@en ;
+	rdfs:comment "The Windows Event Log channel in which the event was recorded (e.g., 'Security', 'System', 'Application', 'Microsoft-Windows-Sysmon/Operational')."@en ;
+	rdfs:range xsd:string ;
+	.
+
+observable_ai_ext:eventProvider
+	a owl:DatatypeProperty ;
+	rdfs:label "eventProvider"@en ;
+	rdfs:comment "The provider (source) name that generated the event record (e.g., 'Microsoft-Windows-Security-Auditing', 'Microsoft-Windows-Sysmon')."@en ;
+	rdfs:range xsd:string ;
+	.
+
+observable_ai_ext:eventComputer
+	a owl:DatatypeProperty ;
+	rdfs:label "eventComputer"@en ;
+	rdfs:comment "The computer name recorded in the event, identifying the machine on which the event was generated."@en ;
+	rdfs:range xsd:string ;
+	.
+
+observable_ai_ext:subjectAccount
+	a owl:ObjectProperty ;
+	rdfs:subPropertyOf observable:account ;
+	rdfs:label "subjectAccount"@en ;
+	rdfs:comment "The subject (acting) account referenced by a Windows event record. Corresponds to SubjectUserSid/SubjectUserName fields in Windows Security events. This is the account that performed the action logged by the event."@en ;
+	rdfs:range observable:ObservableObject ;
+	.
+
+observable_ai_ext:targetAccount
+	a owl:ObjectProperty ;
+	rdfs:subPropertyOf observable:account ;
+	rdfs:label "targetAccount"@en ;
+	rdfs:comment "The target account referenced by a Windows event record. Corresponds to TargetUserSid/TargetUserName fields in Windows Security events. This is the account that was acted upon (e.g., the account being logged into during a logon event)."@en ;
+	rdfs:range observable:ObservableObject ;
+	.
+
+observable_ai_ext:logonId
+	a owl:DatatypeProperty ;
+	rdfs:label "logonId"@en ;
+	rdfs:comment "The Windows logon/session identifier from event records, process tokens, or memory analysis. Logon IDs are useful for correlating subject activity across multiple events, processes, and memory artifacts within the same logon session (e.g., '0x3E7' for SYSTEM, '0x1A2B3C' for an interactive logon)."@en ;
+	rdfs:range xsd:string ;
+	.
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# 3) Memory Image Representation
+# ═══════════════════════════════════════════════════════════════════════════════
+
+observable_ai_ext:MemoryImage
+	a
+		owl:Class ,
+		sh:NodeShape
+		;
+	rdfs:subClassOf observable:ObservableObject ;
+	rdfs:label "Memory Image"@en ;
+	rdfs:comment "A representation of acquired volatile memory (RAM) from a computer system. This may be a full physical memory dump, a hibernation file (hiberfil.sys), a pagefile (pagefile.sys), a crash dump, or other memory acquisition format. Memory images serve as data sources from which processes, network connections, loaded modules, user sessions, and other volatile artifacts can be extracted. Generated for Project VIC's Autopsy-Rust project."@en ;
+	sh:targetClass observable_ai_ext:MemoryImage ;
+	.
+
+observable_ai_ext:MemoryImageFacet
+	a
+		owl:Class ,
+		sh:NodeShape
+		;
+	rdfs:subClassOf uco-core:Facet ;
+	rdfs:label "Memory Image Facet"@en ;
+	rdfs:comment "A facet capturing characteristics of a memory image acquisition, including the format of the image, the time of acquisition, the CPU architecture of the source system, and any additional notes about the acquisition process."@en ;
+	sh:property
+		[
+			sh:datatype xsd:dateTime ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:acquiredTime ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:memoryFormat ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:architecture ;
+		]
+		;
+	sh:targetClass observable_ai_ext:MemoryImageFacet ;
+	.
+
+observable_ai_ext:acquiredTime
+	a owl:DatatypeProperty ;
+	rdfs:label "acquiredTime"@en ;
+	rdfs:comment "The date and time at which the memory image was acquired from the source system, if known."@en ;
+	rdfs:range xsd:dateTime ;
+	.
+
+observable_ai_ext:memoryFormat
+	a owl:DatatypeProperty ;
+	rdfs:label "memoryFormat"@en ;
+	rdfs:comment "The format of the memory image (e.g., 'raw', 'AFF4', 'Lime', 'hiberfil', 'pagefile', 'crashdump', 'ELF core')."@en ;
+	rdfs:range xsd:string ;
+	.
+
+observable_ai_ext:architecture
+	a owl:DatatypeProperty ;
+	rdfs:label "architecture"@en ;
+	rdfs:comment "The CPU architecture of the source system (e.g., 'x86', 'amd64', 'arm64')."@en ;
+	rdfs:range xsd:string ;
+	.

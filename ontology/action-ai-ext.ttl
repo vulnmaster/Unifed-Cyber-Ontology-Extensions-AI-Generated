@@ -1,0 +1,22 @@
+# imports: https://ontology.unifiedcyberontology.org/uco/core/1.4.0
+# imports: https://ontology.unifiedcyberontology.org/uco/action/1.4.0
+
+@prefix action_ai_ext: <https://ontology.unifiedcyberontology.org/uco/action-ai-ext/> .
+@prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<https://ontology.unifiedcyberontology.org/uco/action-ai-ext>
+	a owl:Ontology ;
+	rdfs:label "UCO Action AI Extensions (AI-Generated) - Reserved"@en ;
+	rdfs:comment "Reserved UCO Action extension namespace for Project VIC's Autopsy-Rust project. This ontology is a placeholder for future AI-generated action modeling concepts. No additional terms are defined at this time. This namespace is reserved to ensure consistent URI structure across all UCO AI extension submodules."@en ;
+	owl:imports
+		uco-core:1.4.0 ,
+		uco-action:1.4.0
+		;
+	owl:versionIRI action_ai_ext:1.0.0 ;
+	.
+
+# No additional terms defined in this reserved namespace.
+# Future extensions may add action modeling concepts as needed.
