@@ -272,3 +272,367 @@ observable_ai_ext:architecture
 	rdfs:comment "The CPU architecture of the source system (e.g., 'x86', 'amd64', 'arm64')."@en ;
 	rdfs:range xsd:string ;
 	.
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# 4) Digital Account Extension Properties
+#
+# Properties used by Autopsy-Rust on uco-observable:AccountFacet to capture
+# Windows-specific and multi-platform account join keys beyond the base
+# UCO accountIdentifier.  These enable deduplication and correlation of
+# account objects across multiple artifacts.
+# ═══════════════════════════════════════════════════════════════════════════════
+
+observable_ai_ext:rid
+	a owl:DatatypeProperty ;
+	rdfs:label "rid"@en ;
+	rdfs:comment "The Windows Relative Identifier (RID) portion of a Security Identifier (SID). RIDs such as 500 (Administrator) or 501 (Guest) identify well-known accounts; user-created accounts typically start at 1000. Used as a secondary join key when a full SID is unavailable."@en ;
+	rdfs:range xsd:string ;
+	.
+
+observable_ai_ext:accountDomain
+	a owl:DatatypeProperty ;
+	rdfs:label "accountDomain"@en ;
+	rdfs:comment "The domain or machine name associated with an account (e.g., 'WORKGROUP', 'CONTOSO', or a local hostname). Combined with the username, this forms a unique key for account deduplication across artifacts."@en ;
+	rdfs:range xsd:string ;
+	.
+
+observable_ai_ext:profilePath
+	a owl:DatatypeProperty ;
+	rdfs:label "profilePath"@en ;
+	rdfs:comment "The file system path to the user's profile directory (e.g., 'C:\\Users\\jdoe', '/home/jdoe'). Used as a fallback join key when SID or username+domain pairs are unavailable."@en ;
+	rdfs:range xsd:string ;
+	.
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# 5) Encryption Detection Facet
+#
+# Captures findings from the Encryption Detection ingest module when a file
+# or volume is identified as encrypted or suspected of containing encryption.
+# ═══════════════════════════════════════════════════════════════════════════════
+
+observable_ai_ext:EncryptionDetectionFacet
+	a
+		owl:Class ,
+		sh:NodeShape
+		;
+	rdfs:subClassOf uco-core:Facet ;
+	rdfs:label "Encryption Detection Facet"@en ;
+	rdfs:comment "A facet describing a file or volume detected as encrypted or suspected of containing encrypted content. Captures the detection method (entropy analysis, known container signature, header magic), the identified or suspected encryption algorithm, and the confidence level of the determination. Generated for Project VIC's Autopsy-Rust Encryption Detection module."@en ;
+	sh:property
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:detectionMethod ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:encryptionType ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:detectionStatus ;
+		] ,
+		[
+			sh:datatype xsd:decimal ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:entropyValue ;
+		]
+		;
+	sh:targetClass observable_ai_ext:EncryptionDetectionFacet ;
+	.
+
+observable_ai_ext:detectionMethod
+	a owl:DatatypeProperty ;
+	rdfs:label "detectionMethod"@en ;
+	rdfs:comment "The method used to detect encryption (e.g., 'entropy_analysis', 'header_signature', 'known_container_extension', 'volume_header')."@en ;
+	rdfs:range xsd:string ;
+	.
+
+observable_ai_ext:encryptionType
+	a owl:DatatypeProperty ;
+	rdfs:label "encryptionType"@en ;
+	rdfs:comment "The identified or suspected encryption algorithm or container type (e.g., 'BitLocker', 'FileVault', 'VeraCrypt', 'AES-256-CBC', 'PGP', 'unknown')."@en ;
+	rdfs:range xsd:string ;
+	.
+
+observable_ai_ext:detectionStatus
+	a owl:DatatypeProperty ;
+	rdfs:label "detectionStatus"@en ;
+	rdfs:comment "Whether encryption was confirmed ('detected') or merely suspected based on heuristics ('suspected')."@en ;
+	rdfs:range xsd:string ;
+	.
+
+observable_ai_ext:entropyValue
+	a owl:DatatypeProperty ;
+	rdfs:label "entropyValue"@en ;
+	rdfs:comment "The computed Shannon entropy of the file or segment, expressed as a decimal between 0.0 and 8.0 (bits per byte). High entropy (typically > 7.5) is a strong indicator of encryption or compression."@en ;
+	rdfs:range xsd:decimal ;
+	.
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# 6) YARA Match Facet
+#
+# Captures findings from the YARA ingest module when a file matches one
+# or more YARA rules.
+# ═══════════════════════════════════════════════════════════════════════════════
+
+observable_ai_ext:YaraMatchFacet
+	a
+		owl:Class ,
+		sh:NodeShape
+		;
+	rdfs:subClassOf uco-core:Facet ;
+	rdfs:label "YARA Match Facet"@en ;
+	rdfs:comment "A facet describing a YARA rule match against a file. Captures the rule name, the rule set or file from which it originated, and the match offset within the file. Multiple matches against the same file may produce multiple facets or multiple instances. Generated for Project VIC's Autopsy-Rust YARA module."@en ;
+	sh:property
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:yaraRuleName ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:yaraRuleFile ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:yaraRuleNamespace ;
+		]
+		;
+	sh:targetClass observable_ai_ext:YaraMatchFacet ;
+	.
+
+observable_ai_ext:yaraRuleName
+	a owl:DatatypeProperty ;
+	rdfs:label "yaraRuleName"@en ;
+	rdfs:comment "The name of the YARA rule that matched (e.g., 'ransomware_wannacry', 'mimikatz_strings')."@en ;
+	rdfs:range xsd:string ;
+	.
+
+observable_ai_ext:yaraRuleFile
+	a owl:DatatypeProperty ;
+	rdfs:label "yaraRuleFile"@en ;
+	rdfs:comment "The path or filename of the YARA rule file that contains the matched rule."@en ;
+	rdfs:range xsd:string ;
+	.
+
+observable_ai_ext:yaraRuleNamespace
+	a owl:DatatypeProperty ;
+	rdfs:label "yaraRuleNamespace"@en ;
+	rdfs:comment "The YARA namespace of the matched rule, if the rule file defines namespaces."@en ;
+	rdfs:range xsd:string ;
+	.
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# 7) Interesting Item Facet
+#
+# Captures findings from the Interesting Items ingest module when a file
+# or artifact matches a user-defined or built-in rule set.
+# ═══════════════════════════════════════════════════════════════════════════════
+
+observable_ai_ext:InterestingItemFacet
+	a
+		owl:Class ,
+		sh:NodeShape
+		;
+	rdfs:subClassOf uco-core:Facet ;
+	rdfs:label "Interesting Item Facet"@en ;
+	rdfs:comment "A facet indicating that a file or artifact was flagged as 'interesting' by a configurable rule set. Captures the rule set name, the specific rule that matched, and the match reason. Supports both built-in rules (e.g., encryption indicators, executables in temp folders) and user-defined rules. Generated for Project VIC's Autopsy-Rust Interesting Items module."@en ;
+	sh:property
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:ruleSetName ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:ruleName ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:matchReason ;
+		]
+		;
+	sh:targetClass observable_ai_ext:InterestingItemFacet ;
+	.
+
+observable_ai_ext:ruleSetName
+	a owl:DatatypeProperty ;
+	rdfs:label "ruleSetName"@en ;
+	rdfs:comment "The name of the rule set that flagged this item (e.g., 'Encryption Suspects', 'Executables in Temp')."@en ;
+	rdfs:range xsd:string ;
+	.
+
+observable_ai_ext:ruleName
+	a owl:DatatypeProperty ;
+	rdfs:label "ruleName"@en ;
+	rdfs:comment "The name of the specific rule within the rule set that matched."@en ;
+	rdfs:range xsd:string ;
+	.
+
+observable_ai_ext:matchReason
+	a owl:DatatypeProperty ;
+	rdfs:label "matchReason"@en ;
+	rdfs:comment "A human-readable explanation of why the item was flagged (e.g., 'File extension .exe found in Users/*/AppData/Local/Temp')."@en ;
+	rdfs:range xsd:string ;
+	.
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# 8) Program Execution Facet
+#
+# Captures evidence of program execution from Prefetch, UserAssist,
+# ShimCache, BAM/DAM, and similar Windows artifacts.
+# ═══════════════════════════════════════════════════════════════════════════════
+
+observable_ai_ext:ProgramExecutionFacet
+	a
+		owl:Class ,
+		sh:NodeShape
+		;
+	rdfs:subClassOf uco-core:Facet ;
+	rdfs:label "Program Execution Facet"@en ;
+	rdfs:comment "A facet documenting evidence that a program was executed on the system. Sources include Windows Prefetch files, UserAssist registry keys, ShimCache, BAM/DAM, Amcache, and similar execution artifacts. Captures execution count, last execution time(s), and the artifact source. Generated for Project VIC's Autopsy-Rust Recent Activity module."@en ;
+	sh:property
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:programName ;
+		] ,
+		[
+			sh:datatype xsd:integer ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:executionCount ;
+		] ,
+		[
+			sh:datatype xsd:dateTime ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:lastExecutionTime ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:executionSource ;
+		]
+		;
+	sh:targetClass observable_ai_ext:ProgramExecutionFacet ;
+	.
+
+observable_ai_ext:programName
+	a owl:DatatypeProperty ;
+	rdfs:label "programName"@en ;
+	rdfs:comment "The name or path of the executed program as recorded by the execution artifact source."@en ;
+	rdfs:range xsd:string ;
+	.
+
+observable_ai_ext:executionCount
+	a owl:DatatypeProperty ;
+	rdfs:label "executionCount"@en ;
+	rdfs:comment "The number of times the program was executed, as recorded by the artifact source (e.g., Prefetch run count, UserAssist count)."@en ;
+	rdfs:range xsd:integer ;
+	.
+
+observable_ai_ext:lastExecutionTime
+	a owl:DatatypeProperty ;
+	rdfs:label "lastExecutionTime"@en ;
+	rdfs:comment "The most recent execution timestamp as recorded by the artifact source."@en ;
+	rdfs:range xsd:dateTime ;
+	.
+
+observable_ai_ext:executionSource
+	a owl:DatatypeProperty ;
+	rdfs:label "executionSource"@en ;
+	rdfs:comment "The artifact source from which execution evidence was derived (e.g., 'Prefetch', 'UserAssist', 'ShimCache', 'BAM', 'Amcache')."@en ;
+	rdfs:range xsd:string ;
+	.
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# 9) Verification Result Facet
+#
+# Captures data integrity verification results from the Data Source
+# Integrity module.
+# ═══════════════════════════════════════════════════════════════════════════════
+
+observable_ai_ext:VerificationResultFacet
+	a
+		owl:Class ,
+		sh:NodeShape
+		;
+	rdfs:subClassOf uco-core:Facet ;
+	rdfs:label "Verification Result Facet"@en ;
+	rdfs:comment "A facet documenting the result of a data integrity verification (e.g., comparing computed hashes of a forensic image against known-good values). Captures the verification type, expected and actual values, and pass/fail status. Generated for Project VIC's Autopsy-Rust Data Source Integrity module."@en ;
+	sh:property
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:verificationType ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:expectedValue ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:actualValue ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:verificationStatus ;
+		]
+		;
+	sh:targetClass observable_ai_ext:VerificationResultFacet ;
+	.
+
+observable_ai_ext:verificationType
+	a owl:DatatypeProperty ;
+	rdfs:label "verificationType"@en ;
+	rdfs:comment "The type of verification performed (e.g., 'MD5', 'SHA-256', 'SHA-1', 'sector_hash')."@en ;
+	rdfs:range xsd:string ;
+	.
+
+observable_ai_ext:expectedValue
+	a owl:DatatypeProperty ;
+	rdfs:label "expectedValue"@en ;
+	rdfs:comment "The expected hash or checksum value that was compared against."@en ;
+	rdfs:range xsd:string ;
+	.
+
+observable_ai_ext:actualValue
+	a owl:DatatypeProperty ;
+	rdfs:label "actualValue"@en ;
+	rdfs:comment "The computed hash or checksum value obtained from the data source."@en ;
+	rdfs:range xsd:string ;
+	.
+
+observable_ai_ext:verificationStatus
+	a owl:DatatypeProperty ;
+	rdfs:label "verificationStatus"@en ;
+	rdfs:comment "Whether the verification passed or failed (e.g., 'passed', 'failed', 'skipped')."@en ;
+	rdfs:range xsd:string ;
+	.
