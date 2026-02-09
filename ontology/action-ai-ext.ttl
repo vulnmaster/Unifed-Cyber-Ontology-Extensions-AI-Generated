@@ -212,3 +212,63 @@ action_ai_ext:CrossCaseCorrelation
 	rdfs:label "Cross-Case Correlation"@en ;
 	rdfs:comment "Checking of file hashes and other correlation attributes against the central repository for cross-case matches and notable item identification."@en ;
 	.
+
+action_ai_ext:PlasoTimelineExtraction
+	a owl:NamedIndividual ;
+	rdfs:label "Plaso Timeline Extraction"@en ;
+	rdfs:comment "Timeline event extraction via Plaso (log2timeline.py / psort.py) from a data source."@en ;
+	.
+
+action_ai_ext:MalwareScanning
+	a owl:NamedIndividual ;
+	rdfs:label "Malware Scanning"@en ;
+	rdfs:comment "Hash-based scanning of files against a malware hash set; posts AnalysisResult on match."@en ;
+	.
+
+action_ai_ext:ScalpelCarving
+	a owl:NamedIndividual ;
+	rdfs:label "Scalpel Carving"@en ;
+	rdfs:comment "File recovery from unallocated space using the Scalpel carver (external binary)."@en ;
+	.
+
+action_ai_ext:PhotoRecCarving
+	a owl:NamedIndividual ;
+	rdfs:label "PhotoRec Carving"@en ;
+	rdfs:comment "File recovery from unallocated space using PhotoRec (external binary)."@en ;
+	.
+
+action_ai_ext:ObjectDetection
+	a owl:NamedIndividual ;
+	rdfs:label "Object Detection"@en ;
+	rdfs:comment "Image object detection via ONNX (YOLO/SSD-style) model; posts AnalysisResult with label, confidence, bounding box."@en ;
+	.
+
+action_ai_ext:FileExtensionMismatchCheck
+	a owl:NamedIndividual ;
+	rdfs:label "File Extension Mismatch Check"@en ;
+	rdfs:comment "Detection of files whose extension does not match the identified MIME type."@en ;
+	.
+
+action_ai_ext:iOSArtifactExtraction
+	a owl:NamedIndividual ;
+	rdfs:label "iOS Artifact Extraction"@en ;
+	rdfs:comment "Extraction and parsing of iOS artifacts via iLEAPP (contacts, messages, call logs, etc.)."@en ;
+	.
+
+action_ai_ext:GPXParsing
+	a owl:NamedIndividual ;
+	rdfs:label "GPX Parsing"@en ;
+	rdfs:comment "Parsing of GPX files to extract GPS trackpoints, routes, and waypoints."@en ;
+	.
+
+action_ai_ext:TextExtraction
+	a owl:NamedIndividual ;
+	rdfs:label "Text Extraction"@en ;
+	rdfs:comment "Extraction of text content from files (plain text, PDF, Office, HTML, etc.); posts ExtractedText artifacts."@en ;
+	.
+
+action_ai_ext:PictureAnalysis
+	a owl:NamedIndividual ;
+	rdfs:label "Picture Analysis"@en ;
+	rdfs:comment "EXIF/GPS metadata extraction and image categorization (picture analyzer module)."@en ;
+	.

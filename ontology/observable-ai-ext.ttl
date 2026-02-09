@@ -636,3 +636,418 @@ observable_ai_ext:verificationStatus
 	rdfs:comment "Whether the verification passed or failed (e.g., 'passed', 'failed', 'skipped')."@en ;
 	rdfs:range xsd:string ;
 	.
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# 10) EXIF Data Facet
+#
+# Captures EXIF metadata extracted from image files (JPEG, TIFF, etc.)
+# by the Picture Analyzer module.
+# ═══════════════════════════════════════════════════════════════════════════════
+
+observable_ai_ext:EXIFDataFacet
+	a
+		owl:Class ,
+		sh:NodeShape
+		;
+	rdfs:subClassOf uco-core:Facet ;
+	rdfs:label "EXIF Data Facet"@en ;
+	rdfs:comment "A facet capturing EXIF metadata extracted from image files. Includes camera make/model, original capture date/time, GPS coordinates, and image dimensions. Generated for Project VIC's Autopsy-Rust Picture Analyzer module."@en ;
+	sh:property
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:exifCameraMake ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:exifCameraModel ;
+		] ,
+		[
+			sh:datatype xsd:dateTime ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:exifDateTimeOriginal ;
+		] ,
+		[
+			sh:datatype xsd:decimal ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:exifGpsLatitude ;
+		] ,
+		[
+			sh:datatype xsd:decimal ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:exifGpsLongitude ;
+		] ,
+		[
+			sh:datatype xsd:integer ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:exifImageWidth ;
+		] ,
+		[
+			sh:datatype xsd:integer ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:exifImageHeight ;
+		]
+		;
+	sh:targetClass observable_ai_ext:EXIFDataFacet ;
+	.
+
+observable_ai_ext:exifCameraMake
+	a owl:DatatypeProperty ;
+	rdfs:label "exifCameraMake"@en ;
+	rdfs:comment "The camera manufacturer from EXIF Make tag."@en ;
+	rdfs:range xsd:string ;
+	.
+
+observable_ai_ext:exifCameraModel
+	a owl:DatatypeProperty ;
+	rdfs:label "exifCameraModel"@en ;
+	rdfs:comment "The camera model from EXIF Model tag."@en ;
+	rdfs:range xsd:string ;
+	.
+
+observable_ai_ext:exifDateTimeOriginal
+	a owl:DatatypeProperty ;
+	rdfs:label "exifDateTimeOriginal"@en ;
+	rdfs:comment "The original date and time when the photo was taken, from EXIF DateTimeOriginal tag."@en ;
+	rdfs:range xsd:dateTime ;
+	.
+
+observable_ai_ext:exifGpsLatitude
+	a owl:DatatypeProperty ;
+	rdfs:label "exifGpsLatitude"@en ;
+	rdfs:comment "GPS latitude coordinate from EXIF GPS data."@en ;
+	rdfs:range xsd:decimal ;
+	.
+
+observable_ai_ext:exifGpsLongitude
+	a owl:DatatypeProperty ;
+	rdfs:label "exifGpsLongitude"@en ;
+	rdfs:comment "GPS longitude coordinate from EXIF GPS data."@en ;
+	rdfs:range xsd:decimal ;
+	.
+
+observable_ai_ext:exifImageWidth
+	a owl:DatatypeProperty ;
+	rdfs:label "exifImageWidth"@en ;
+	rdfs:comment "Image width in pixels from EXIF PixelXDimension or ImageWidth tag."@en ;
+	rdfs:range xsd:integer ;
+	.
+
+observable_ai_ext:exifImageHeight
+	a owl:DatatypeProperty ;
+	rdfs:label "exifImageHeight"@en ;
+	rdfs:comment "Image height in pixels from EXIF PixelYDimension or ImageLength tag."@en ;
+	rdfs:range xsd:integer ;
+	.
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# 11) Hash Set Hit Facet
+#
+# Captures information about a file matching a known hash value in a
+# hash set database (e.g., NSRL, Project VIC, custom hash sets).
+# ═══════════════════════════════════════════════════════════════════════════════
+
+observable_ai_ext:HashSetHitFacet
+	a
+		owl:Class ,
+		sh:NodeShape
+		;
+	rdfs:subClassOf uco-core:Facet ;
+	rdfs:label "Hash Set Hit Facet"@en ;
+	rdfs:comment "A facet indicating that a file's hash matched a value in a known hash set database. Captures the hash set name, the matched hash algorithm and value, and the categorization (e.g., known good, known bad, notable). Generated for Project VIC's Autopsy-Rust Hash Lookup module."@en ;
+	sh:property
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:hashSetName ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:matchedHashValue ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:hashCategory ;
+		]
+		;
+	sh:targetClass observable_ai_ext:HashSetHitFacet ;
+	.
+
+observable_ai_ext:hashSetName
+	a owl:DatatypeProperty ;
+	rdfs:label "hashSetName"@en ;
+	rdfs:comment "The name of the hash set database that contained the matching hash (e.g., 'NSRL', 'Project VIC', 'Custom Evidence Set')."@en ;
+	rdfs:range xsd:string ;
+	.
+
+observable_ai_ext:matchedHashValue
+	a owl:DatatypeProperty ;
+	rdfs:label "matchedHashValue"@en ;
+	rdfs:comment "The hash value that was matched in the hash set."@en ;
+	rdfs:range xsd:string ;
+	.
+
+observable_ai_ext:hashCategory
+	a owl:DatatypeProperty ;
+	rdfs:label "hashCategory"@en ;
+	rdfs:comment "The categorization of the matched hash (e.g., 'known', 'known_bad', 'notable')."@en ;
+	rdfs:range xsd:string ;
+	.
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# 12) Web Download Facet
+#
+# Extends web history artifacts with download-specific metadata.
+# ═══════════════════════════════════════════════════════════════════════════════
+
+observable_ai_ext:WebDownloadFacet
+	a
+		owl:Class ,
+		sh:NodeShape
+		;
+	rdfs:subClassOf uco-core:Facet ;
+	rdfs:label "Web Download Facet"@en ;
+	rdfs:comment "A facet capturing download-specific metadata for files obtained via a web browser. Includes the source URL, the local download path, and the download timestamp. Generated for Project VIC's Autopsy-Rust Recent Activity module."@en ;
+	sh:property
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:downloadSourceUrl ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:downloadTargetPath ;
+		] ,
+		[
+			sh:datatype xsd:dateTime ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:downloadDateTime ;
+		]
+		;
+	sh:targetClass observable_ai_ext:WebDownloadFacet ;
+	.
+
+observable_ai_ext:downloadSourceUrl
+	a owl:DatatypeProperty ;
+	rdfs:label "downloadSourceUrl"@en ;
+	rdfs:comment "The URL from which the file was downloaded."@en ;
+	rdfs:range xsd:string ;
+	.
+
+observable_ai_ext:downloadTargetPath
+	a owl:DatatypeProperty ;
+	rdfs:label "downloadTargetPath"@en ;
+	rdfs:comment "The local file path where the download was saved."@en ;
+	rdfs:range xsd:string ;
+	.
+
+observable_ai_ext:downloadDateTime
+	a owl:DatatypeProperty ;
+	rdfs:label "downloadDateTime"@en ;
+	rdfs:comment "The date and time the download was initiated or completed."@en ;
+	rdfs:range xsd:dateTime ;
+	.
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# 13) Timeline Event Facet
+#
+# Captures timeline events from the Plaso / log2timeline ingest module.
+# ═══════════════════════════════════════════════════════════════════════════════
+
+observable_ai_ext:TimelineEventFacet
+	a
+		owl:Class ,
+		sh:NodeShape
+		;
+	rdfs:subClassOf uco-core:Facet ;
+	rdfs:label "Timeline Event Facet"@en ;
+	rdfs:comment "A facet describing a timeline event extracted by Plaso (log2timeline). Captures the event type (parser/source), timestamp, and description. Attachable to ObservableObject for timeline events. Generated for Project VIC's Autopsy-Rust Plaso module."@en ;
+	sh:property
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:eventType ;
+		] ,
+		[
+			sh:datatype xsd:dateTime ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:eventTimestamp ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:eventDescription ;
+		]
+		;
+	sh:targetClass observable_ai_ext:TimelineEventFacet ;
+	.
+
+observable_ai_ext:eventType
+	a owl:DatatypeProperty ;
+	rdfs:label "eventType"@en ;
+	rdfs:comment "The parser or source type of the timeline event (e.g., Plaso parser name, sourcetype)."@en ;
+	rdfs:range xsd:string ;
+	.
+
+observable_ai_ext:eventTimestamp
+	a owl:DatatypeProperty ;
+	rdfs:label "eventTimestamp"@en ;
+	rdfs:comment "The date and time when the timeline event occurred."@en ;
+	rdfs:range xsd:dateTime ;
+	.
+
+observable_ai_ext:eventDescription
+	a owl:DatatypeProperty ;
+	rdfs:label "eventDescription"@en ;
+	rdfs:comment "A short description or message for the timeline event."@en ;
+	rdfs:range xsd:string ;
+	.
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# 14) Object Detection Facet
+#
+# Captures object detection results from the Object Detection ingest module
+# (ONNX/YOLO-style inference on images).
+# ═══════════════════════════════════════════════════════════════════════════════
+
+observable_ai_ext:ObjectDetectionFacet
+	a
+		owl:Class ,
+		sh:NodeShape
+		;
+	rdfs:subClassOf uco-core:Facet ;
+	rdfs:label "Object Detection Facet"@en ;
+	rdfs:comment "A facet describing an object detection result from image analysis. Captures the detected label, confidence score, bounding box, and optional model name. Generated for Project VIC's Autopsy-Rust Object Detection module."@en ;
+	sh:property
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:detectionLabel ;
+		] ,
+		[
+			sh:datatype xsd:decimal ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:confidence ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:boundingBox ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:modelName ;
+		]
+		;
+	sh:targetClass observable_ai_ext:ObjectDetectionFacet ;
+	.
+
+observable_ai_ext:detectionLabel
+	a owl:DatatypeProperty ;
+	rdfs:label "detectionLabel"@en ;
+	rdfs:comment "The class or label of the detected object (e.g., COCO class name)."@en ;
+	rdfs:range xsd:string ;
+	.
+
+observable_ai_ext:confidence
+	a owl:DatatypeProperty ;
+	rdfs:label "confidence"@en ;
+	rdfs:comment "The confidence score of the detection (typically 0.0 to 1.0)."@en ;
+	rdfs:range xsd:decimal ;
+	.
+
+observable_ai_ext:boundingBox
+	a owl:DatatypeProperty ;
+	rdfs:label "boundingBox"@en ;
+	rdfs:comment "The bounding box of the detection, e.g. 'x,y,w,h' in normalized or pixel coordinates."@en ;
+	rdfs:range xsd:string ;
+	.
+
+observable_ai_ext:modelName
+	a owl:DatatypeProperty ;
+	rdfs:label "modelName"@en ;
+	rdfs:comment "The name or path of the object detection model used (optional)."@en ;
+	rdfs:range xsd:string ;
+	.
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# 15) Malware Hit Facet
+#
+# Captures malware hash set matches from the Malware Scan ingest module.
+# ═══════════════════════════════════════════════════════════════════════════════
+
+observable_ai_ext:MalwareHitFacet
+	a
+		owl:Class ,
+		sh:NodeShape
+		;
+	rdfs:subClassOf uco-core:Facet ;
+	rdfs:label "Malware Hit Facet"@en ;
+	rdfs:comment "A facet indicating that a file's hash matched a known malware hash set. Captures the hash set name, matched hash value (MD5), description, and optional category (e.g. 'known_bad'). Semantically distinct from HashsetHitFacet for malware-specific filtering. Generated for Project VIC's Autopsy-Rust Malware Scan module."@en ;
+	sh:property
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:hashSetName ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:matchedHashValue ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:malwareHitDescription ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:threatCategory ;
+		]
+		;
+	sh:targetClass observable_ai_ext:MalwareHitFacet ;
+	.
+
+observable_ai_ext:malwareHitDescription
+	a owl:DatatypeProperty ;
+	rdfs:label "malwareHitDescription"@en ;
+	rdfs:comment "Human-readable description of the malware hit (e.g., 'File hash matches known malware set: setname')."@en ;
+	rdfs:range xsd:string ;
+	.
+
+observable_ai_ext:threatCategory
+	a owl:DatatypeProperty ;
+	rdfs:label "threatCategory"@en ;
+	rdfs:comment "Category of the malware hit (e.g., 'known_bad'). May be set by exporter for malware-scan outputs."@en ;
+	rdfs:range xsd:string ;
+	.

@@ -123,6 +123,47 @@ A facet documenting data integrity verification results from the Data Source Int
 | `actualValue` | DatatypeProperty | Computed hash/checksum value |
 | `verificationStatus` | DatatypeProperty | Pass/fail/skipped status |
 
+#### 10. Timeline Event (`TimelineEventFacet`)
+
+A facet for timeline events extracted by the Plaso (log2timeline) ingest module.
+
+| Term | Type | Description |
+|------|------|-------------|
+| `TimelineEventFacet` | Class (Facet) | Timeline event metadata |
+| `eventType` | DatatypeProperty | Parser/source type (e.g., Plaso parser name) |
+| `eventTimestamp` | DatatypeProperty | When the event occurred (xsd:dateTime) |
+| `eventDescription` | DatatypeProperty | Short description or message |
+
+**Module:** Plaso (`org.sleuthkit.autopsy.modules.plaso`)
+
+#### 11. Object Detection (`ObjectDetectionFacet`)
+
+A facet for object detection results from the Object Detection (ONNX) ingest module.
+
+| Term | Type | Description |
+|------|------|-------------|
+| `ObjectDetectionFacet` | Class (Facet) | Object detection result |
+| `detectionLabel` | DatatypeProperty | Detected class/label |
+| `confidence` | DatatypeProperty | Confidence score (0.0–1.0) |
+| `boundingBox` | DatatypeProperty | Bounding box (e.g. "x,y,w,h") |
+| `modelName` | DatatypeProperty | Optional model name/path |
+
+**Module:** Object Detection (`org.sleuthkit.autopsy.modules.object-detection`)
+
+#### 12. Malware Hit (`MalwareHitFacet`)
+
+A facet for files whose hash matched a malware hash set (Malware Scan module).
+
+| Term | Type | Description |
+|------|------|-------------|
+| `MalwareHitFacet` | Class (Facet) | Malware hash set match metadata |
+| `hashSetName` | DatatypeProperty | Name of the malware hash set |
+| `matchedHashValue` | DatatypeProperty | Matched hash (MD5) |
+| `malwareHitDescription` | DatatypeProperty | Human-readable description |
+| `threatCategory` | DatatypeProperty | Optional category (e.g. "known_bad") |
+
+**Module:** Malware Scan (`org.sleuthkit.autopsy.modules.malware-scan`)
+
 ### `tool-ai-ext` (Reserved)
 
 **Namespace URI:** `https://ontology.unifiedcyberontology.org/uco/tool-ai-ext/`
@@ -175,6 +216,16 @@ Named individuals representing the types of forensic analysis actions performed 
 | `DroneDataParsing` | Drone flight log parsing |
 | `AndroidArtifactExtraction` | Android app database extraction |
 | `CrossCaseCorrelation` | Central repository cross-case matching |
+| `PlasoTimelineExtraction` | Plaso/log2timeline timeline extraction |
+| `MalwareScanning` | Malware hash set scanning |
+| `ScalpelCarving` | Scalpel-based file carving |
+| `PhotoRecCarving` | PhotoRec-based file carving |
+| `ObjectDetection` | Image object detection (ONNX) |
+| `FileExtensionMismatchCheck` | File extension vs MIME mismatch |
+| `iOSArtifactExtraction` | iLEAPP iOS artifact extraction |
+| `GPXParsing` | GPX file parsing |
+| `TextExtraction` | Text extractor module |
+| `PictureAnalysis` | Picture analyzer (EXIF, etc.) |
 
 ## Non-Assertion Policy
 
