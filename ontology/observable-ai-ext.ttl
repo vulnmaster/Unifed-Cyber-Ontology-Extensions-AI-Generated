@@ -878,7 +878,7 @@ observable_ai_ext:TimelineEventFacet
 		;
 	rdfs:subClassOf uco-core:Facet ;
 	rdfs:label "Timeline Event Facet"@en ;
-	rdfs:comment "A facet describing a timeline event extracted by Plaso (log2timeline). Captures the event type (parser/source), timestamp, and description. Attachable to ObservableObject for timeline events. Generated for Project VIC's Autopsy-Rust Plaso module."@en ;
+	rdfs:comment "A facet describing a timeline event extracted by Plaso (log2timeline). Captures parser/source type, event timestamp, human-readable description, and additional context such as host, username, timestamp meaning, source filename/display name, pathspec, and tags."@en ;
 	sh:property
 		[
 			sh:datatype xsd:string ;
@@ -897,6 +897,47 @@ observable_ai_ext:TimelineEventFacet
 			sh:maxCount "1"^^xsd:integer ;
 			sh:nodeKind sh:Literal ;
 			sh:path observable_ai_ext:eventDescription ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:eventHostname ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:eventUsername ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:timestampDescription ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:sourceFilename ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:sourceDisplayName ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:sourcePathspec ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:eventTag ;
 		]
 		;
 	sh:targetClass observable_ai_ext:TimelineEventFacet ;
@@ -920,6 +961,55 @@ observable_ai_ext:eventDescription
 	a owl:DatatypeProperty ;
 	rdfs:label "eventDescription"@en ;
 	rdfs:comment "A short description or message for the timeline event."@en ;
+	rdfs:range xsd:string ;
+	.
+
+observable_ai_ext:eventHostname
+	a owl:DatatypeProperty ;
+	rdfs:label "eventHostname"@en ;
+	rdfs:comment "Host or computer name associated with the timeline event, when provided by the source parser."@en ;
+	rdfs:range xsd:string ;
+	.
+
+observable_ai_ext:eventUsername
+	a owl:DatatypeProperty ;
+	rdfs:label "eventUsername"@en ;
+	rdfs:comment "User account name associated with the timeline event, when available."@en ;
+	rdfs:range xsd:string ;
+	.
+
+observable_ai_ext:timestampDescription
+	a owl:DatatypeProperty ;
+	rdfs:label "timestampDescription"@en ;
+	rdfs:comment "Description of what the timestamp represents (e.g., creation time, access time, modification time)."@en ;
+	rdfs:range xsd:string ;
+	.
+
+observable_ai_ext:sourceFilename
+	a owl:DatatypeProperty ;
+	rdfs:label "sourceFilename"@en ;
+	rdfs:comment "Source filename reported by Plaso for the event."@en ;
+	rdfs:range xsd:string ;
+	.
+
+observable_ai_ext:sourceDisplayName
+	a owl:DatatypeProperty ;
+	rdfs:label "sourceDisplayName"@en ;
+	rdfs:comment "Source display name reported by Plaso for the event."@en ;
+	rdfs:range xsd:string ;
+	.
+
+observable_ai_ext:sourcePathspec
+	a owl:DatatypeProperty ;
+	rdfs:label "sourcePathspec"@en ;
+	rdfs:comment "Source pathspec string reported by Plaso for the event."@en ;
+	rdfs:range xsd:string ;
+	.
+
+observable_ai_ext:eventTag
+	a owl:DatatypeProperty ;
+	rdfs:label "eventTag"@en ;
+	rdfs:comment "Tag(s) associated with the timeline event (e.g., parser/classification tags)."@en ;
 	rdfs:range xsd:string ;
 	.
 
@@ -1049,5 +1139,210 @@ observable_ai_ext:threatCategory
 	a owl:DatatypeProperty ;
 	rdfs:label "threatCategory"@en ;
 	rdfs:comment "Category of the malware hit (e.g., 'known_bad'). May be set by exporter for malware-scan outputs."@en ;
+	rdfs:range xsd:string ;
+	.
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# 16) Cross-Case Correlation Facet
+#
+# Captures central repository correlation results emitted as AnalysisResult
+# artifacts by the cross-case correlation ingest module.
+# ═══════════════════════════════════════════════════════════════════════════════
+
+observable_ai_ext:CrossCaseCorrelationFacet
+	a
+		owl:Class ,
+		sh:NodeShape
+		;
+	rdfs:subClassOf uco-core:Facet ;
+	rdfs:label "Cross-Case Correlation Facet"@en ;
+	rdfs:comment "A facet describing cross-case correlation results from a central repository lookup. Captures correlation type, a short summary, and related case references or names."@en ;
+	sh:property
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:correlationType ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:correlationSummary ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:correlatedCaseList ;
+		]
+		;
+	sh:targetClass observable_ai_ext:CrossCaseCorrelationFacet ;
+	.
+
+observable_ai_ext:correlationType
+	a owl:DatatypeProperty ;
+	rdfs:label "correlationType"@en ;
+	rdfs:comment "The type of correlation performed (e.g., file hash, domain, account, or other repository-supported attribute)."@en ;
+	rdfs:range xsd:string ;
+	.
+
+observable_ai_ext:correlationSummary
+	a owl:DatatypeProperty ;
+	rdfs:label "correlationSummary"@en ;
+	rdfs:comment "A concise summary of the correlation outcome returned by the central repository lookup."@en ;
+	rdfs:range xsd:string ;
+	.
+
+observable_ai_ext:correlatedCaseList
+	a owl:DatatypeProperty ;
+	rdfs:label "correlatedCaseList"@en ;
+	rdfs:comment "A string or serialized list naming case identifiers associated with the correlation hit."@en ;
+	rdfs:range xsd:string ;
+	.
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# 17) Face Detection Facet
+#
+# Captures face detection output produced by picture analysis workflows.
+# ═══════════════════════════════════════════════════════════════════════════════
+
+observable_ai_ext:FaceDetectedFacet
+	a
+		owl:Class ,
+		sh:NodeShape
+		;
+	rdfs:subClassOf uco-core:Facet ;
+	rdfs:label "Face Detected Facet"@en ;
+	rdfs:comment "A facet describing face detection results extracted from an image, including count and optional confidence or bounding box data."@en ;
+	sh:property
+		[
+			sh:datatype xsd:integer ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:faceCount ;
+		] ,
+		[
+			sh:datatype xsd:decimal ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:confidence ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:boundingBox ;
+		]
+		;
+	sh:targetClass observable_ai_ext:FaceDetectedFacet ;
+	.
+
+observable_ai_ext:faceCount
+	a owl:DatatypeProperty ;
+	rdfs:label "faceCount"@en ;
+	rdfs:comment "The number of faces detected in the source image."@en ;
+	rdfs:range xsd:integer ;
+	.
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# 18) Keyword Hit Facet
+#
+# Captures keyword-search results including matched term and nearby context.
+# ═══════════════════════════════════════════════════════════════════════════════
+
+observable_ai_ext:KeywordHitFacet
+	a
+		owl:Class ,
+		sh:NodeShape
+		;
+	rdfs:subClassOf uco-core:Facet ;
+	rdfs:label "Keyword Hit Facet"@en ;
+	rdfs:comment "A facet describing a keyword-search hit, including the matched keyword, preview/context text, and keyword set name when applicable."@en ;
+	sh:property
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:keywordTerm ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:keywordContext ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:keywordSetName ;
+		]
+		;
+	sh:targetClass observable_ai_ext:KeywordHitFacet ;
+	.
+
+observable_ai_ext:keywordTerm
+	a owl:DatatypeProperty ;
+	rdfs:label "keywordTerm"@en ;
+	rdfs:comment "The exact keyword, phrase, or expression that produced the hit."@en ;
+	rdfs:range xsd:string ;
+	.
+
+observable_ai_ext:keywordContext
+	a owl:DatatypeProperty ;
+	rdfs:label "keywordContext"@en ;
+	rdfs:comment "A short snippet of surrounding content that provides context for the keyword hit."@en ;
+	rdfs:range xsd:string ;
+	.
+
+observable_ai_ext:keywordSetName
+	a owl:DatatypeProperty ;
+	rdfs:label "keywordSetName"@en ;
+	rdfs:comment "The keyword list or set from which the matching term originated."@en ;
+	rdfs:range xsd:string ;
+	.
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# 19) Bluetooth Facet Compatibility
+#
+# Compatibility facet for exporters that currently emit BluetoothFacet.
+# ═══════════════════════════════════════════════════════════════════════════════
+
+observable_ai_ext:BluetoothFacet
+	a
+		owl:Class ,
+		sh:NodeShape
+		;
+	rdfs:subClassOf uco-core:Facet ;
+	rdfs:label "Bluetooth Facet"@en ;
+	rdfs:comment "Compatibility facet for Bluetooth artifacts when exporter output uses a generic BluetoothFacet label. Captures device name and address where available."@en ;
+	sh:property
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:bluetoothAddress ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path observable_ai_ext:bluetoothName ;
+		]
+		;
+	sh:targetClass observable_ai_ext:BluetoothFacet ;
+	.
+
+observable_ai_ext:bluetoothAddress
+	a owl:DatatypeProperty ;
+	rdfs:label "bluetoothAddress"@en ;
+	rdfs:comment "A Bluetooth device address (e.g., BD_ADDR) associated with the artifact."@en ;
+	rdfs:range xsd:string ;
+	.
+
+observable_ai_ext:bluetoothName
+	a owl:DatatypeProperty ;
+	rdfs:label "bluetoothName"@en ;
+	rdfs:comment "A Bluetooth device name or alias associated with the artifact."@en ;
 	rdfs:range xsd:string ;
 	.
