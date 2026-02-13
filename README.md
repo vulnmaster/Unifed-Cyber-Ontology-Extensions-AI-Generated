@@ -14,7 +14,7 @@ Extensions are organized as submodules mirroring UCO's namespace structure. CASE
 **Prefix:** `observable_ai_ext`
 **File:** [`ontology/observable-ai-ext.ttl`](ontology/observable-ai-ext.ttl)
 
-Adds three groups of concepts to UCO Observable:
+Adds multiple groups of concepts to UCO Observable:
 
 #### 1. Forensic Extraction Provenance (`ForensicExtractionFacet`)
 
@@ -133,6 +133,13 @@ A facet for timeline events extracted by the Plaso (log2timeline) ingest module.
 | `eventType` | DatatypeProperty | Parser/source type (e.g., Plaso parser name) |
 | `eventTimestamp` | DatatypeProperty | When the event occurred (xsd:dateTime) |
 | `eventDescription` | DatatypeProperty | Short description or message |
+| `eventHostname` | DatatypeProperty | Host/computer name associated with the event |
+| `eventUsername` | DatatypeProperty | User account name associated with the event |
+| `timestampDescription` | DatatypeProperty | Meaning of the timestamp (e.g., created/modified/accessed) |
+| `sourceFilename` | DatatypeProperty | Source filename reported by Plaso |
+| `sourceDisplayName` | DatatypeProperty | Source display name reported by Plaso |
+| `sourcePathspec` | DatatypeProperty | Source pathspec string from Plaso |
+| `eventTag` | DatatypeProperty | Event tags/classification labels |
 
 **Module:** Plaso (`org.sleuthkit.autopsy.modules.plaso`)
 
@@ -163,6 +170,51 @@ A facet for files whose hash matched a malware hash set (Malware Scan module).
 | `threatCategory` | DatatypeProperty | Optional category (e.g. "known_bad") |
 
 **Module:** Malware Scan (`org.sleuthkit.autopsy.modules.malware-scan`)
+
+#### 13. Cross-Case Correlation (`CrossCaseCorrelationFacet`)
+
+A facet for central repository cross-case correlation results emitted as analysis findings.
+
+| Term | Type | Description |
+|------|------|-------------|
+| `CrossCaseCorrelationFacet` | Class (Facet) | Cross-case correlation result metadata |
+| `correlationType` | DatatypeProperty | Correlation type used (hash/domain/account/etc.) |
+| `correlationSummary` | DatatypeProperty | Summary of the correlation outcome |
+| `correlatedCaseList` | DatatypeProperty | List/string of correlated case identifiers |
+
+**Module:** Central Repository Correlation (`org.sleuthkit.autopsy.centralrepository.ingestmodule`)
+
+#### 14. Face Detection (`FaceDetectedFacet`)
+
+A facet for face detection results from picture analysis workflows.
+
+| Term | Type | Description |
+|------|------|-------------|
+| `FaceDetectedFacet` | Class (Facet) | Face detection metadata |
+| `faceCount` | DatatypeProperty | Number of detected faces |
+| `confidence` | DatatypeProperty | Optional confidence score |
+| `boundingBox` | DatatypeProperty | Optional face bounding box |
+
+#### 15. Keyword Hit (`KeywordHitFacet`)
+
+A facet for keyword-search matches with contextual metadata.
+
+| Term | Type | Description |
+|------|------|-------------|
+| `KeywordHitFacet` | Class (Facet) | Keyword hit metadata |
+| `keywordTerm` | DatatypeProperty | Matched keyword/phrase/expression |
+| `keywordContext` | DatatypeProperty | Surrounding context snippet |
+| `keywordSetName` | DatatypeProperty | Name of keyword set/list |
+
+#### 16. Bluetooth Compatibility (`BluetoothFacet`)
+
+A compatibility facet for exporter outputs using a generic Bluetooth facet label.
+
+| Term | Type | Description |
+|------|------|-------------|
+| `BluetoothFacet` | Class (Facet) | Bluetooth compatibility metadata |
+| `bluetoothAddress` | DatatypeProperty | Bluetooth device address (BD_ADDR) |
+| `bluetoothName` | DatatypeProperty | Bluetooth device name/alias |
 
 ### `tool-ai-ext` (Reserved)
 
